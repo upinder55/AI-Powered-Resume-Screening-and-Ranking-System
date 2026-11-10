@@ -115,11 +115,4 @@ You can log in manually or use the **1-Click Quick Login** buttons on the sign-i
 
 ---
 
-## 🎓 College Viva Defense & Technical Q&A
 
-- **Why use TF-IDF rather than basic keyword counts?**
-  Basic keyword counts inflate common words like "the", "developer", or "project". TF-IDF computes the product of Term Frequency (local importance) and Inverse Document Frequency (corpus specificity), ensuring that rare, high-value technical terms (e.g., "PyTorch", "Kubernetes") carry significant weight.
-- **Why is Cosine Similarity chosen over Euclidean Distance?**
-  Euclidean distance scales with document length—a verbose 4-page resume will be mathematically far from a concise job description. Cosine similarity evaluates the angle between high-dimensional vector representations, measuring semantic overlap independent of length.
-- **How does the system prevent keyword stuffing?**
-  The system uses multi-factor weighting: Skill Coverage (45%), TF-IDF Semantic Similarity (25%), Work Tenure (15%), and Education Degree (15%). Even if an applicant stuffs keywords, lack of verified tenure or appropriate degree automatically penalizes the composite score.
