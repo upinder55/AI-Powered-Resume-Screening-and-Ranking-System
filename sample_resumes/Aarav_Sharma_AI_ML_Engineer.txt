@@ -1,0 +1,28 @@
+Aarav Sharma
+Email: aarav.sharma@gmail.com | Phone: +91 98765 43210 | Location: Bangalore, India
+LinkedIn: https://linkedin.com/in/aarav-sharma-ml | GitHub: https://github.com/aarav-sharma
+
+PROFESSIONAL SUMMARY
+Innovative AI/ML Engineer with 3.5 years of experience architecting end-to-end Machine Learning pipelines, NLP systems, and predictive models. Proven expertise in PyTorch, TensorFlow, scikit-learn, and deploying containerized microservices using Docker and FastAPI on AWS.
+
+EDUCATION
+B.Tech in Computer Science and Engineering, IIT Kharagpur (2018 - 2022)
+
+TECHNICAL SKILLS
+Python, Machine Learning, Deep Learning, NLP, PyTorch, TensorFlow, Scikit-Learn, Pandas, NumPy, FastAPI, Docker, Kubernetes, AWS, SQL, Git, Linux
+
+PROFESSIONAL EXPERIENCE
+Senior Machine Learning Engineer | DataCore Systems (2022 - Present)
+• Designed and productionized transformer-based NLP models reducing customer ticket routing time by 42%.
+• Built end-to-end predictive modeling workflows using scikit-learn, Pandas, and PyTorch.
+• Containerized AI services with Docker and deployed scalable REST APIs using FastAPI and Kubernetes.
+• Collaborated with DevOps teams to integrate automated model retraining CI/CD pipelines.
+
+Junior Data Scientist | CogniTech Analytics (2021 - 2022)
+• Developed deep learning image classification models with TensorFlow and OpenCV.
+• Cleaned and preprocessed large-scale datasets using NumPy, Pandas, and SQL.
+• Performed statistical A/B testing and model evaluation using precision, recall, and ROC-AUC.
+
+KEY PROJECTS
+• Resume Screening & Parser: Built an automated recruitment parser using TF-IDF and Spacy entity recognition.
+• Customer Churn Prediction: Implemented XGBoost and Random Forest models achieving 89% accuracy.

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI Powered Resume Screening and Ranking System{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="brand">
+                <div class="brand-icon">⚡</div>
+                <div>
+                    <div>TalentMatch AI</div>
+                </div>
+                <span class="brand-badge">ATS Engine</span>
+            </a>
+
+            {% if current_user %}
+            <ul class="nav-links">
+                <li><a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">Dashboard</a></li>
+                <li><a href="{{ url_for('screen') }}" class="nav-link {% if request.endpoint == 'screen' %}active{% endif %}">Screen & Rank</a></li>
+                <li><a href="{{ url_for('jobs') }}" class="nav-link {% if request.endpoint == 'jobs' %}active{% endif %}">Job Openings</a></li>
+                <li><a href="{{ url_for('candidate_portal') }}" class="nav-link {% if request.endpoint == 'candidate_portal' %}active{% endif %}">Applicant Portal</a></li>
+                <li><a href="{{ url_for('architecture') }}" class="nav-link {% if request.endpoint == 'architecture' %}active{% endif %}">Model Architecture</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <div class="user-badge">
+                    <span>👤 {{ current_user.name.split()[0] }}</span>
+                    <span class="role-pill {{ current_user.role }}">{{ current_user.role }}</span>
+                </div>
+                <a href="{{ url_for('logout') }}" class="btn btn-secondary btn-sm">Sign Out</a>
+            </div>
+            {% else %}
+            <ul class="nav-links">
+                <li><a href="{{ url_for('candidate_portal') }}" class="nav-link">Applicant Portal</a></li>
+                <li><a href="{{ url_for('architecture') }}" class="nav-link">Architecture & Viva</a></li>
+                <li><a href="{{ url_for('login') }}" class="btn btn-secondary btn-sm">Sign In</a></li>
+                <li><a href="{{ url_for('register') }}" class="btn btn-primary btn-sm">Sign Up</a></li>
+            </ul>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Global Flash Messages -->
+    <div class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        <span>{{ message }}</span>
+                        <button onclick="this.parentElement.style.display='none'" style="background:none; border:none; cursor:pointer; font-size:1.2rem; line-height:1; color:inherit;">&times;</button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Page Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p><strong>AI-Powered Resume Screening & Ranking System</strong> • Capstone Academic Project</p>
+            <p style="margin-top: 4px; font-size: 0.8rem; color: #94a3b8;">TF-IDF Vector Space Model &middot; Cosine Similarity &middot; Named Entity & Skill Extraction &middot; Explainable AI Ranking</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

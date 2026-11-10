@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block title %}Job Openings - TalentMatch AI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="action-bar">
+        <div>
+            <h1 style="font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em;">Job Openings & Role Criteria</h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 2px;">
+                Define technical requirements, skill thresholds, and AI scoring weights for each position.
+            </p>
+        </div>
+        <a href="#newJobCard" class="btn btn-primary">➕ Post New Job Opening</a>
+    </div>
+
+    <!-- Existing Job Openings -->
+    <div class="card" style="margin-bottom: 36px;">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Configured Positions ({{ jobs|length }})</div>
+                <div class="card-subtitle">Active screening templates used by the AI engine</div>
+            </div>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Job Title & Location</th>
+                            <th>Dept & Type</th>
+                            <th>Min Experience & Degree</th>
+                            <th>Required Technical Stack</th>
+                            <th>Scoring Weights</th>
+                            <th>Candidates</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in jobs %}
+                        <tr>
+                            <td>
+                                <strong style="color: var(--primary); font-size: 0.95rem;">{{ job.title }}</strong>
+                                <div style="font-size: 0.78rem; color: var(--text-muted);">📍 {{ job.location }}</div>
+                            </td>
+                            <td>
+                                <div>{{ job.department }}</div>
+                                <span class="badge badge-neutral" style="margin-top: 4px;">{{ job.job_type }}</span>
+                            </td>
+                            <td>
+                                <div>{{ job.min_experience }} Years</div>
+                                <span class="badge badge-primary" style="margin-top: 4px;">{{ job.min_education }}</span>
+                            </td>
+                            <td style="max-width: 320px;">
+                                <div class="skill-tags">
+                                    {% for s in job.required_skills %}
+                                    <span class="skill-tag matched">{{ s }}</span>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">
+                                <div>Skill: <strong>{{ (job.skill_weight * 100)|round|int }}%</strong></div>
+                                <div>Semantic: <strong>{{ (job.semantic_weight * 100)|round|int }}%</strong></div>
+                                <div>Exp: <strong>{{ (job.experience_weight * 100)|round|int }}%</strong> &middot; Edu: <strong>{{ (job.education_weight * 100)|round|int }}%</strong></div>
+                            </td>
+                            <td>
+                                <strong>{{ job.applicant_count }}</strong> screened
+                            </td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <a href="{{ url_for('screen', job_id=job.id) }}" class="btn btn-primary btn-sm">Screen &rarr;</a>
+                                <form method="POST" action="{{ url_for('delete_job_route', job_id=job.id) }}" style="display: inline-block; margin-left: 6px;" onsubmit="return confirm('Delete this job posting and its screening records?');">
+                                    <button type="submit" class="btn btn-secondary btn-sm" style="color: var(--danger);">🗑️</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Post New Job Card -->
+    <div class="card" id="newJobCard">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Post a New Job Role</div>
+                <div class="card-subtitle">Set the screening criteria and weighting model</div>
+            </div>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('jobs') }}">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="title" class="form-label">Job Title *</label>
+                        <input type="text" id="title" name="title" class="form-control" placeholder="e.g. Senior Machine Learning Engineer" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department" class="form-label">Department / Team *</label>
+                        <input type="text" id="department" name="department" class="form-control" placeholder="e.g. AI & Data Platforms" required>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" id="location" name="location" class="form-control" placeholder="e.g. Bangalore / Remote" value="Hybrid / On-site">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="job_type" class="form-label">Employment Type</label>
+                        <select id="job_type" name="job_type" class="form-control">
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Contract">Contract</option>
+                            <option value="Internship">Internship</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="min_experience" class="form-label">Minimum Experience (Years) *</label>
+                        <input type="number" id="min_experience" name="min_experience" class="form-control" step="0.5" min="0" max="25" value="2.0" required>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="min_education" class="form-label">Minimum Degree Requirement</label>
+                        <select id="min_education" name="min_education" class="form-control">
+                            <option value="B.Tech">B.Tech / B.E. / B.S.</option>
+                            <option value="M.Tech">M.Tech / M.S. / M.E.</option>
+                            <option value="MCA">MCA / BCA</option>
+                            <option value="Ph.D">Ph.D / Doctorate</option>
+                            <option value="Diploma">Diploma / Any</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="skills" class="form-label">Required Technical Skills (comma-separated) *</label>
+                        <input type="text" id="skills" name="skills" class="form-control" placeholder="python, machine learning, pytorch, docker, sql, git" required>
+                        <div class="form-hint">These skills form the exact-match dictionary for candidate evaluation.</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description" class="form-label">Job Description & Responsibilities *</label>
+                    <textarea id="description" name="description" class="form-control" rows="4" placeholder="Describe the job duties, day-to-day responsibilities, and qualifications..." required></textarea>
+                    <div class="form-hint">Used by the TF-IDF vectorizer to extract semantic context and calculate Cosine Similarity.</div>
+                </div>
+
+                <div style="background: var(--surface-alt); padding: 18px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 20px;">
+                    <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 12px; color: var(--text-main);">
+                        ⚖️ Multi-Criterion Scoring Weights (Must sum to ~100%)
+                    </div>
+                    <div class="grid-4">
+                        <div>
+                            <label class="form-label" style="font-size: 0.8rem;">Skill Match Weight (%)</label>
+                            <input type="number" name="skill_weight" class="form-control" value="45" min="0" max="100">
+                        </div>
+                        <div>
+                            <label class="form-label" style="font-size: 0.8rem;">Semantic / TF-IDF (%)</label>
+                            <input type="number" name="semantic_weight" class="form-control" value="25" min="0" max="100">
+                        </div>
+                        <div>
+                            <label class="form-label" style="font-size: 0.8rem;">Experience Weight (%)</label>
+                            <input type="number" name="experience_weight" class="form-control" value="15" min="0" max="100">
+                        </div>
+                        <div>
+                            <label class="form-label" style="font-size: 0.8rem;">Education Weight (%)</label>
+                            <input type="number" name="education_weight" class="form-control" value="15" min="0" max="100">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg">Publish Job Opening & Save Weights</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

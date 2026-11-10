@@ -1,0 +1,27 @@
+Priya Patel
+Email: priya.patel.dev@gmail.com | Phone: +91 98112 34567 | Location: Pune, India
+LinkedIn: https://linkedin.com/in/priyapatel-dev | GitHub: https://github.com/priyapatel-code
+
+PROFESSIONAL SUMMARY
+Dynamic Full Stack Software Engineer with 2.5 years of experience developing responsive web applications and scalable backends. Skilled in Python (Django, Flask), React.js, TypeScript, PostgreSQL, and REST API design.
+
+EDUCATION
+B.Tech in Information Technology, Pune University (2019 - 2023)
+
+TECHNICAL SKILLS
+Python, JavaScript, TypeScript, React, React.js, Django, Flask, PostgreSQL, MySQL, REST API, HTML5, CSS3, Tailwind CSS, Git, Docker
+
+PROFESSIONAL EXPERIENCE
+Full Stack Web Developer | CloudMinds Tech (2023 - Present)
+• Engineered responsive single-page applications using React.js, Redux, and Tailwind CSS.
+• Architected RESTful backend APIs utilizing Python and Django REST Framework with PostgreSQL.
+• Integrated authentication with JWT and managed CI/CD deployment via GitHub Actions and Docker.
+• Improved database query performance by 35% through indexing and query optimization.
+
+Web Developer Intern | TechSphere Solutions (2022 - 2023)
+• Built reusable frontend components using React and JavaScript.
+• Developed CRUD microservices with Flask and SQLite.
+
+KEY PROJECTS
+• E-Commerce SaaS Platform: Developed a multi-tenant store with React frontend and Django backend.
+• Team Collaboration Board: Kanban-style task manager built with WebSockets and Redux.

@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}System Architecture & Viva Guide - TalentMatch AI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="action-bar" style="margin-bottom: 28px;">
+        <div>
+            <h1 style="font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em;">System Architecture & Viva Defense Reference</h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 2px;">
+                Mathematical formulation, NLP entity pipeline, and academic viva evaluation notes.
+            </p>
+        </div>
+    </div>
+
+    <!-- 1. Pipeline Overview -->
+    <div class="card" style="margin-bottom: 28px;">
+        <div class="card-header">
+            <div>
+                <div class="card-title">1. End-to-End System Pipeline</div>
+                <div class="card-subtitle">Data processing stages from raw document to ranked leaderboard</div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div style="background: #0f172a; color: #f8fafc; padding: 24px; border-radius: var(--radius-md); font-family: monospace; font-size: 0.88rem; line-height: 1.8; overflow-x: auto;">
+[Input: PDF / DOCX / TXT Resumes]
+      │
+      ▼
+┌────────────────────────────────────────────────────────┐
+│  STAGE 1: DOCUMENT INGESTION & TEXT EXTRACTION        │
+│  • pypdf / python-docx stream parsers                   │
+│  • Normalization & Unicode character sanitization      │
+└────────────────────────────────────────────────────────┘
+      │
+      ▼
+┌────────────────────────────────────────────────────────┐
+│  STAGE 2: ENTITY RECOGNITION & TAXONOMY MATCHING      │
+│  • Contact Info (Email, Phone via Regex)               │
+│  • Degree Hierarchy (Ph.D > M.Tech > B.Tech > Diploma) │
+│  • Experience Timeline Calculation (Year-span analysis)│
+│  • Skills Ontology Matching (N-gram lookup & aliases)  │
+└────────────────────────────────────────────────────────┘
+      │
+      ▼
+┌────────────────────────────────────────────────────────┐
+│  STAGE 3: VECTOR SPACE MODEL (NLP SIMILARITY)         │
+│  • TF-IDF Unigram + Bigram Tokenization                │
+│  • English Stop-words removal                          │
+│  • Cosine Similarity between JD and Candidate Vectors  │
+└────────────────────────────────────────────────────────┘
+      │
+      ▼
+┌────────────────────────────────────────────────────────┐
+│  STAGE 4: MULTI-CRITERION COMPOSITE RANKING            │
+│  Score = W_skill·S_skill + W_sem·S_sem + W_exp·S_exp   │
+│          + W_edu·S_edu                                 │
+└────────────────────────────────────────────────────────┘
+      │
+      ▼
+┌────────────────────────────────────────────────────────┐
+│  STAGE 5: EXPLAINABLE AI OUTPUT & LEADERBOARD          │
+│  • Ranked Leaderboard Table with Sub-scores            │
+│  • Visual Skill Gap Matrix (Matched vs Missing)        │
+│  • Recommendation: Strong Hire / Shortlist / Reject    │
+└────────────────────────────────────────────────────────┘
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Mathematical Formulations -->
+    <div class="card" style="margin-bottom: 28px;">
+        <div class="card-header">
+            <div>
+                <div class="card-title">2. Mathematical & Algorithmic Formulation</div>
+                <div class="card-subtitle">Formal definitions implemented in models/ranker.py</div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="grid-2">
+                <div style="background: var(--surface-alt); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                    <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">
+                        A. TF-IDF (Term Frequency - Inverse Document Frequency)
+                    </h3>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 12px;">
+                        Evaluates the relative importance of a keyword within the resume corpus, penalizing generic stop words while elevating rare technical terms.
+                    </p>
+                    <div style="background: #ffffff; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-family: monospace; font-size: 0.85rem; color: #1e3a8a;">
+                        TF(t, d) = f(t, d) / ∑ f(t', d)<br/><br/>
+                        IDF(t, D) = log((1 + |D|) / (1 + |{d ∈ D : t ∈ d}|)) + 1
+                    </div>
+                </div>
+
+                <div style="background: var(--surface-alt); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                    <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">
+                        B. Cosine Similarity in Vector Space
+                    </h3>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 12px;">
+                        Measures the angular cosine distance between the Job Description vector <strong>u</strong> and Candidate Resume vector <strong>v</strong>, invariant to document length.
+                    </p>
+                    <div style="background: #ffffff; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-family: monospace; font-size: 0.85rem; color: #1e3a8a;">
+                        Cosine_Sim(u, v) = (u · v) / (||u||₂ · ||v||₂)<br/><br/>
+                        Semantic_Score = round(Cosine_Sim(u, v) * 100, 2)
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; background: var(--surface-alt); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">
+                    C. Weighted Multi-Criterion Synthesis Formula
+                </h3>
+                <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 12px;">
+                    Prevents keyword stuffing by synthesizing four independent evaluation vectors with user-configurable weights:
+                </p>
+                <div style="background: #ffffff; padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-family: monospace; font-size: 0.88rem; color: #065f46;">
+                    Overall_Score = (W_skill × S_skill) + (W_sem × S_sem) + (W_exp × S_exp) + (W_edu × S_edu)<br/>
+                    Default Weights: W_skill = 0.45, W_sem = 0.25, W_exp = 0.15, W_edu = 0.15
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. College Viva Q&A -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">3. Frequently Asked College Viva Questions & Answers</div>
+                <div class="card-subtitle">Key questions professors ask during capstone project presentation</div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div style="border-left: 3px solid var(--primary); padding-left: 14px;">
+                    <strong style="color: var(--text-main); font-size: 0.95rem;">Q1: Why is Cosine Similarity preferred over Euclidean distance for text comparison?</strong>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 4px;">
+                        Euclidean distance is sensitive to document length (a 4-page resume will have large magnitude vectors even if relevant). Cosine similarity measures the angle between vectors rather than Euclidean distance, making it length-invariant and focusing purely on term distribution and vocabulary alignment.
+                    </p>
+                </div>
+
+                <div style="border-left: 3px solid var(--primary); padding-left: 14px;">
+                    <strong style="color: var(--text-main); font-size: 0.95rem;">Q2: How does the system handle multi-word skills like 'Machine Learning' or 'REST API'?</strong>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 4px;">
+                        The TF-IDF vectorizer is configured with an n-gram range of (1, 2) to capture both unigrams and bigrams. Concurrently, the entity extractor uses regex phrase boundaries against a structured taxonomy of known technical skills, preventing false positives (e.g., distinguishing 'C' from arbitrary words).
+                    </p>
+                </div>
+
+                <div style="border-left: 3px solid var(--primary); padding-left: 14px;">
+                    <strong style="color: var(--text-main); font-size: 0.95rem;">Q3: How does your system address "keyword stuffing" where applicants paste invisible skills?</strong>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 4px;">
+                        Our system uses multi-factor weighting rather than single-metric scoring. Even if a candidate stuffs keywords, the experience alignment (15%) and education qualification (15%) check for verified work tenure and degrees, and sublinear term frequency scaling dampens repetition penalties.
+                    </p>
+                </div>
+
+                <div style="border-left: 3px solid var(--primary); padding-left: 14px;">
+                    <strong style="color: var(--text-main); font-size: 0.95rem;">Q4: What makes this an Explainable AI (XAI) system?</strong>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 4px;">
+                        Unlike opaque neural networks that emit an arbitrary score, our engine produces transparent sub-scores (Skill Match %, Semantic %, Exp %, Edu %) and generates explicit bullet points identifying which required skills are matched, which are missing, and why a specific hiring verdict was recommended.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

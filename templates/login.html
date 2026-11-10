@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign In - TalentMatch AI{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div style="font-size: 2.2rem; margin-bottom: 8px;">💼</div>
+            <h1>Welcome to TalentMatch</h1>
+            <p>AI-Powered Resume Screening & Ranking System</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="name@college.edu" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 8px;">Sign In to Dashboard</button>
+        </form>
+
+        <!-- 1-Click Evaluator Demo Logins -->
+        <div class="demo-box">
+            <div class="demo-box-title">⚡ Evaluator Quick Test (1-Click Login)</div>
+            <div class="demo-buttons">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="fillCredentials('recruiter@college.edu', 'admin123')">
+                    👑 HR / Recruiter
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="fillCredentials('candidate@college.edu', 'admin123')">
+                    👤 Candidate
+                </button>
+            </div>
+            <p style="font-size: 0.74rem; color: #64748b; margin-top: 6px; text-align: center;">Click either button to autofill credentials and test instantly.</p>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px; font-size: 0.88rem; color: #64748b;">
+            Don't have an account? <a href="{{ url_for('register') }}" style="color: var(--primary); font-weight: 600; text-decoration: none;">Create one here</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

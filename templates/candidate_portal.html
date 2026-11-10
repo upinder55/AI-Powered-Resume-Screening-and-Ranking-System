@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %}Applicant Portal - Check ATS Resume Match{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="action-bar" style="margin-bottom: 24px;">
+        <div>
+            <h1 style="font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em;">Applicant ATS Resume Analyzer</h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 2px;">
+                Upload your resume to benchmark your profile against job descriptions and uncover skill gaps.
+            </p>
+        </div>
+    </div>
+
+    <!-- Upload Form Card -->
+    <div class="card" style="margin-bottom: 32px;">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Upload Resume for Screening</div>
+                <div class="card-subtitle">AI analyzes formatting, extracts skills, and calculates compatibility</div>
+            </div>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('candidate_portal') }}" enctype="multipart/form-data">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="job_id" class="form-label">Select Target Job Opening *</label>
+                        <select id="job_id" name="job_id" class="form-control" required>
+                            {% for j in jobs %}
+                            <option value="{{ j.id }}" {% if selected_job and selected_job.id == j.id %}selected{% endif %}>
+                                {{ j.title }} ({{ j.department }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-hint">Your resume will be screened against the exact requirements of this role.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Resume Document (.pdf, .docx, .txt) *</label>
+                        <input type="file" name="resume" class="form-control" accept=".pdf,.docx,.doc,.txt" required>
+                        <div class="form-hint">Upload your CV in PDF or Microsoft Word format.</div>
+                    </div>
+                </div>
+
+                <div style="text-align: right; margin-top: 10px;">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        ⚡ Analyze Resume & Calculate Match Score
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Analysis Results if Submitted -->
+    {% if analysis %}
+    <div style="margin-bottom: 32px;">
+        <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 16px;">
+            ATS Evaluation Report for {{ analysis.profile.name }}
+        </h2>
+
+        <!-- Score Overview Cards -->
+        {% if analysis.ranking %}
+        <div class="grid-4" style="margin-bottom: 24px;">
+            <div class="score-gauge-card">
+                <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Overall ATS Match</div>
+                <div class="score-gauge-num" style="color: {% if analysis.ranking.overall_score >= 75 %}#059669{% elif analysis.ranking.overall_score >= 60 %}#2563eb{% elif analysis.ranking.overall_score >= 45 %}#d97706{% else %}#dc2626{% endif %};">
+                    {{ analysis.ranking.overall_score }}%
+                </div>
+                <div style="margin-top: 6px;">
+                    <span class="badge {% if analysis.ranking.verdict == 'Strong Hire' %}badge-success{% elif analysis.ranking.verdict == 'Shortlisted' %}badge-primary{% elif analysis.ranking.verdict == 'Under Review' %}badge-warning{% else %}badge-danger{% endif %}">
+                        {{ analysis.ranking.verdict }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="score-gauge-card">
+                <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Technical Skills Match</div>
+                <div class="score-gauge-num" style="color: #2563eb;">{{ analysis.ranking.skill_score }}%</div>
+                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 6px;">
+                    {{ analysis.ranking.matched_skills|length }} of {{ analysis.job.required_skills|length }} skills matched
+                </div>
+            </div>
+
+            <div class="score-gauge-card">
+                <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Semantic Alignment</div>
+                <div class="score-gauge-num" style="color: #7e22ce;">{{ analysis.ranking.semantic_score }}%</div>
+                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 6px;">TF-IDF vocabulary relevance</div>
+            </div>
+
+            <div class="score-gauge-card">
+                <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Experience Check</div>
+                <div class="score-gauge-num" style="color: #059669;">{{ analysis.ranking.exp_score }}%</div>
+                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 6px;">
+                    {{ analysis.profile.experience_years }} yrs vs {{ analysis.job.min_experience }} yrs req
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Recommendations & Skill Gaps -->
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Extracted Candidate Profile</div>
+                </div>
+                <div class="card-body">
+                    <div style="display: flex; flex-direction: column; gap: 12px; font-size: 0.92rem;">
+                        <div>👤 <strong>Detected Name:</strong> {{ analysis.profile.name }}</div>
+                        <div>✉️ <strong>Email Address:</strong> {{ analysis.profile.email or 'Not detected' }}</div>
+                        <div>📞 <strong>Phone Number:</strong> {{ analysis.profile.phone or 'Not detected' }}</div>
+                        <div>🎓 <strong>Highest Degree:</strong> {{ analysis.profile.education }}</div>
+                        <div>💼 <strong>Detected Experience:</strong> {{ analysis.profile.experience_years }} Years</div>
+                        <div>📝 <strong>Resume Length:</strong> {{ analysis.profile.word_count }} words</div>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <strong style="font-size: 0.88rem; display: block; margin-bottom: 8px;">All Extracted Skills ({{ analysis.profile.skills|length }}):</strong>
+                        <div class="skill-tags">
+                            {% for skill in analysis.profile.skills %}
+                            <span class="skill-tag">{{ skill }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Actionable ATS Suggestions</div>
+                </div>
+                <div class="card-body">
+                    {% if analysis.ranking %}
+                    <div style="margin-bottom: 18px;">
+                        <h4 style="font-size: 0.92rem; font-weight: 700; color: #991b1b; margin-bottom: 6px;">
+                            Missing Keywords to Add:
+                        </h4>
+                        {% if analysis.ranking.missing_skills %}
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
+                            The ATS looks for these specific competencies in {{ analysis.job.title }}:
+                        </p>
+                        <div class="skill-tags">
+                            {% for s in analysis.ranking.missing_skills %}
+                            <span class="skill-tag missing" style="font-size: 0.85rem;">{{ s }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p style="font-size: 0.85rem; color: #166534; font-weight: 600;">
+                            Great job! Your resume matches all core technical skills for this role.
+                        </p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <h4 style="font-size: 0.92rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">
+                            AI Recommendation:
+                        </h4>
+                        <div style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; background: var(--surface-alt); padding: 12px; border-radius: var(--radius-sm);">
+                            {{ analysis.ranking.recommendation }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

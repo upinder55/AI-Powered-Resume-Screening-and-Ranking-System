@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - TalentMatch AI{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div style="font-size: 2.2rem; margin-bottom: 8px;">🚀</div>
+            <h1>Create an Account</h1>
+            <p>Join the AI-powered recruitment workspace</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('register') }}">
+            <div class="form-group">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Prof. Jane Doe" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="user@college.edu" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Create a secure password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="role" class="form-label">Account Role</label>
+                <select id="role" name="role" class="form-control">
+                    <option value="recruiter">Recruiter / HR / Project Evaluator</option>
+                    <option value="candidate">Job Applicant / Student</option>
+                </select>
+                <div class="form-hint">Recruiters can create jobs & rank bulk resumes. Candidates can test their resume ATS scores.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 12px;">Complete Registration</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 20px; font-size: 0.88rem; color: #64748b;">
+            Already have an account? <a href="{{ url_for('login') }}" style="color: var(--primary); font-weight: 600; text-decoration: none;">Sign in</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

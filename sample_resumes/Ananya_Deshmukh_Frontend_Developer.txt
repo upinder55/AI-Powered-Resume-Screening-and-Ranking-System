@@ -1,0 +1,26 @@
+Ananya Deshmukh
+Email: ananya.deshmukh.ui@gmail.com | Phone: +91 94567 89012 | Location: Chennai, India
+LinkedIn: https://linkedin.com/in/ananya-deshmukh-ui | GitHub: https://github.com/ananya-ui
+
+PROFESSIONAL SUMMARY
+Creative Frontend Developer with 1.5 years of experience specializing in React.js, Tailwind CSS, Next.js, and interactive user experiences. Passionate about responsive design and web accessibility.
+
+EDUCATION
+B.E. in Computer Science, Anna University (2020 - 2024)
+
+TECHNICAL SKILLS
+React, React.js, Next.js, JavaScript, TypeScript, HTML5, CSS3, Tailwind CSS, Bootstrap, Redux, Git, Figma
+
+PROFESSIONAL EXPERIENCE
+Frontend Engineer | PixelCraft Studio (2023 - Present)
+• Built responsive web user interfaces using React, Next.js, and Tailwind CSS.
+• Translated Figma designs into high-performance accessible HTML and CSS layouts.
+• Managed state using Redux Toolkit and integrated REST APIs.
+
+UI/UX Design Intern | CreativeWave (2022 - 2023)
+• Designed interactive wireframes and prototypes in Figma.
+• Implemented client-side form validations and animations using JavaScript.
+
+KEY PROJECTS
+• Interactive Travel Booking UI: Next.js landing page with Tailwind CSS and Framer Motion animations.
+• Design System Component Library: Reusable React component library with Storybook documentation.

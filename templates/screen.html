@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block title %}Screen & Rank Candidates - TalentMatch AI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="action-bar">
+        <div>
+            <h1 style="font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em;">AI Resume Screening & Ranking Console</h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 2px;">
+                Ingest batches of applicant resumes, extract entities, and compute multi-factor rankings.
+            </p>
+        </div>
+
+        {% if current_job %}
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <!-- 1-Click Load Sample Resumes Button -->
+            <form method="POST" action="{{ url_for('load_sample_resumes', job_id=current_job.id) }}">
+                <button type="submit" class="btn btn-secondary" title="Auto-load pre-packaged sample resumes for instant testing">
+                    ⚡ Auto-Load Sample Resumes
+                </button>
+            </form>
+
+            {% if ranked_candidates %}
+            <a href="{{ url_for('export_csv', job_id=current_job.id) }}" class="btn btn-secondary">
+                📥 Export CSV
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Job Selection Bar -->
+    <div class="card" style="margin-bottom: 24px; background: #ffffff;">
+        <div class="card-body" style="padding: 18px 24px;">
+            <form method="GET" action="{{ url_for('screen') }}" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                <label for="job_id" style="font-weight: 700; font-size: 0.95rem; white-space: nowrap;">
+                    🎯 Target Position:
+                </label>
+                <select id="job_id" name="job_id" class="form-control" style="max-width: 380px;" onchange="this.form.submit()">
+                    {% for j in jobs %}
+                    <option value="{{ j.id }}" {% if current_job and current_job.id == j.id %}selected{% endif %}>
+                        {{ j.title }} ({{ j.department }})
+                    </option>
+                    {% endfor %}
+                </select>
+                <noscript><button type="submit" class="btn btn-secondary btn-sm">Switch</button></noscript>
+            </form>
+
+            {% if current_job %}
+            <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
+                <div style="font-size: 0.88rem; color: var(--text-secondary);">
+                    <strong>Requirements:</strong> {{ current_job.min_experience }} yrs exp &middot; Min Degree: {{ current_job.min_education }} &middot;
+                    <span style="color: var(--text-muted);">Weighting: Skills {{ (current_job.skill_weight*100)|round|int }}%, Semantic {{ (current_job.semantic_weight*100)|round|int }}%, Exp {{ (current_job.experience_weight*100)|round|int }}%, Edu {{ (current_job.education_weight*100)|round|int }}%</span>
+                </div>
+                <div class="skill-tags">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); align-self: center;">Target Stack:</span>
+                    {% for skill in current_job.required_skills %}
+                    <span class="skill-tag matched">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Upload Resume Zone -->
+    {% if current_job %}
+    <div class="card" style="margin-bottom: 28px;">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Ingest Candidate Resumes</div>
+                <div class="card-subtitle">Supports PDF (.pdf), Microsoft Word (.docx), and Plain Text (.txt) formats</div>
+            </div>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('screen', job_id=current_job.id) }}" enctype="multipart/form-data">
+                <div class="dropzone" id="dropzone">
+                    <input type="file" id="file-input" name="resumes" class="file-input-hidden" multiple accept=".pdf,.docx,.doc,.txt">
+                    <div class="dropzone-icon">📁</div>
+                    <div class="dropzone-title">Drag & drop resume files here, or click to browse</div>
+                    <div class="dropzone-subtitle">Select multiple resumes at once for high-throughput batch screening</div>
+                </div>
+
+                <div id="file-preview" class="file-list-preview"></div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 18px; flex-wrap: wrap; gap: 10px;">
+                    <div style="font-size: 0.82rem; color: var(--text-muted);">
+                        💡 <strong>Tip for Evaluators:</strong> You can upload your own CV or click "Auto-Load Sample Resumes" above for immediate scoring.
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        🚀 Parse & Screen Resumes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Screening Results & Ranked Leaderboard -->
+    <div class="card">
+        <div class="card-header" style="flex-wrap: wrap; gap: 12px;">
+            <div>
+                <div class="card-title">Candidate Ranking Leaderboard ({{ ranked_candidates|length }})</div>
+                <div class="card-subtitle">Sorted by AI composite match score in descending order</div>
+            </div>
+
+            <!-- Search & Filters -->
+            {% if ranked_candidates %}
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <input type="text" id="candidateSearch" class="form-control" placeholder="Search by name, email..." style="width: 220px; padding: 6px 12px; font-size: 0.85rem;">
+                <select id="verdictFilter" class="form-control" style="width: 160px; padding: 6px 12px; font-size: 0.85rem;">
+                    <option value="all">All Verdicts</option>
+                    <option value="Strong Hire">Strong Hire</option>
+                    <option value="Shortlisted">Shortlisted</option>
+                    <option value="Under Review">Under Review</option>
+                    <option value="Not Recommended">Not Recommended</option>
+                </select>
+            </div>
+            {% endif %}
+        </div>
+        <div class="card-body" style="padding: 0;">
+            {% if ranked_candidates %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">Rank</th>
+                            <th>Candidate Profile</th>
+                            <th>Match Score</th>
+                            <th>Sub-Scores</th>
+                            <th>Skill Alignment</th>
+                            <th>AI Verdict</th>
+                            <th style="text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="candidatesTableBody">
+                        {% for c in ranked_candidates %}
+                        <tr data-verdict="{{ c.verdict }}">
+                            <td>
+                                {% if loop.index == 1 %}
+                                <span class="rank-badge rank-1" title="Top Ranked">1</span>
+                                {% elif loop.index == 2 %}
+                                <span class="rank-badge rank-2" title="Runner Up">2</span>
+                                {% elif loop.index == 3 %}
+                                <span class="rank-badge rank-3">3</span>
+                                {% else %}
+                                <span class="rank-badge rank-other">{{ loop.index }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <strong style="font-size: 0.95rem; color: var(--text-main);">{{ c.candidate_name }}</strong>
+                                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">
+                                    {% if c.email %}✉️ {{ c.email }} &middot; {% endif %}
+                                    🎓 {{ c.education }} &middot; 💼 {{ c.experience_years }} yrs
+                                </div>
+                            </td>
+                            <td style="min-width: 140px;">
+                                <div class="score-container">
+                                    <div class="score-bar-bg">
+                                        <div class="score-bar-fill"
+                                             style="width: {{ c.overall_score }}%; background-color: {% if c.overall_score >= 75 %}#059669{% elif c.overall_score >= 60 %}#2563eb{% elif c.overall_score >= 45 %}#d97706{% else %}#dc2626{% endif %};">
+                                        </div>
+                                    </div>
+                                    <span class="score-text" style="color: {% if c.overall_score >= 75 %}#059669{% elif c.overall_score >= 60 %}#2563eb{% elif c.overall_score >= 45 %}#d97706{% else %}#dc2626{% endif %};">
+                                        {{ c.overall_score }}%
+                                    </span>
+                                </div>
+                            </td>
+                            <td style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4;">
+                                <div>Skills: <strong>{{ c.skill_score }}%</strong></div>
+                                <div>Semantic: <strong>{{ c.semantic_score }}%</strong></div>
+                            </td>
+                            <td style="max-width: 260px;">
+                                <div class="skill-tags">
+                                    {% for m in c.matched_skills[:3] %}
+                                    <span class="skill-tag matched">{{ m }}</span>
+                                    {% endfor %}
+                                    {% for miss in c.missing_skills[:2] %}
+                                    <span class="skill-tag missing">{{ miss }}</span>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge {% if c.verdict == 'Strong Hire' %}badge-success{% elif c.verdict == 'Shortlisted' %}badge-primary{% elif c.verdict == 'Under Review' %}badge-warning{% else %}badge-danger{% endif %}">
+                                    {{ c.verdict }}
+                                </span>
+                            </td>
+                            <td style="text-align: right;">
+                                <a href="{{ url_for('candidate_detail', screening_id=c.id) }}" class="btn btn-secondary btn-sm">
+                                    View Dossier &rarr;
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div style="padding: 48px 20px; text-align: center; color: var(--text-muted);">
+                <div style="font-size: 2.5rem; margin-bottom: 12px;">📂</div>
+                <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">No Resumes Screened for This Position Yet</h3>
+                <p style="font-size: 0.9rem; max-width: 480px; margin: 0 auto 20px;">
+                    Upload resumes using the drag-and-drop zone above or click below to auto-load 6 realistic candidates.
+                </p>
+                {% if current_job %}
+                <form method="POST" action="{{ url_for('load_sample_resumes', job_id=current_job.id) }}">
+                    <button type="submit" class="btn btn-primary">
+                        ⚡ Auto-Load 6 Sample Resumes (Instant Demo)
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

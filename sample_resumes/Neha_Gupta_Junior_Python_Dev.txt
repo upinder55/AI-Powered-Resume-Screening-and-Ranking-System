@@ -1,0 +1,22 @@
+Neha Gupta
+Email: neha.gupta.cs@gmail.com | Phone: +91 91234 56780 | Location: Delhi, India
+LinkedIn: https://linkedin.com/in/neha-gupta-dev | GitHub: https://github.com/nehagupta-py
+
+PROFESSIONAL SUMMARY
+Aspiring Junior Software Developer with hands-on academic and internship experience in Python, Flask, HTML, CSS, and relational databases. Eager to contribute to high-impact software engineering teams.
+
+EDUCATION
+BCA (Bachelor of Computer Applications), Delhi University (2021 - 2024)
+
+TECHNICAL SKILLS
+Python, Flask, SQLite, HTML5, CSS3, JavaScript, Git, Problem Solving, Communication
+
+PROFESSIONAL EXPERIENCE
+Software Intern | AlphaByte Labs (2023 - 2024)
+• Assisted in developing internal automation scripts using Python and Beautiful Soup.
+• Created simple REST API endpoints with Flask and SQLite database.
+• Collaborated on frontend bug fixes using HTML5, CSS3, and JavaScript.
+
+KEY PROJECTS
+• Student Attendance Management: Desktop and web utility using Python, Tkinter, and SQLite.
+• Weather Forecast App: Responsive web app fetching OpenWeatherMap REST API.

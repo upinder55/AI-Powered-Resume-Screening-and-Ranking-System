@@ -1,0 +1,27 @@
+Rohan Verma
+Email: rohan.verma.analytics@outlook.com | Phone: +91 97654 32198 | Location: Mumbai, India
+LinkedIn: https://linkedin.com/in/rohan-verma-data | GitHub: https://github.com/rohan-analytics
+
+PROFESSIONAL SUMMARY
+Detail-oriented Data Analyst with 2 years of experience turning complex datasets into strategic business intelligence dashboards. Proficient in SQL, Tableau, Power BI, Python, Pandas, and Excel data modeling.
+
+EDUCATION
+B.S. in Statistics and Data Science, Mumbai University (2020 - 2023)
+
+TECHNICAL SKILLS
+Python, SQL, Tableau, Power BI, Pandas, NumPy, Excel, Data Analysis, Data Visualization, Matplotlib, Seaborn, ETL, Statistics
+
+PROFESSIONAL EXPERIENCE
+Business Data Analyst | FinMetrics Global (2023 - Present)
+• Created 20+ executive dashboards in Tableau and Power BI tracking revenue KPIs and user retention.
+• Formulated complex SQL queries (CTEs, Window Functions, Joins) on Snowflake and PostgreSQL.
+• Automated weekly reporting pipelines using Python (Pandas, NumPy, OpenPyXL), saving 12 manual hours/week.
+• Conducted root-cause data audits to maintain 99.8% data integrity across ETL pipelines.
+
+Data Analyst Trainee | InsightHub Analytics (2022 - 2023)
+• Executed exploratory data analysis and customer segmentation using Python and Matplotlib.
+• Built financial modeling spreadsheets with advanced Excel formulas and macros.
+
+KEY PROJECTS
+• E-Commerce Sales Performance Dashboard: Interactive Tableau dashboard analyzing $5M in omnichannel sales.
+• Healthcare Patient Flow Forecasting: Time-series analysis model predicting hospital bed occupancy.

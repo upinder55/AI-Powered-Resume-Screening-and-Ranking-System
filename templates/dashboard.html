@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - TalentMatch AI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Welcome Header -->
+    <div class="action-bar" style="margin-bottom: 28px;">
+        <div>
+            <h1 style="font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em;">Recruitment Intelligence Dashboard</h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 2px;">
+                Real-time AI screening metrics, applicant ranking leaderboards, and vacancy pipelines.
+            </p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <a href="{{ url_for('jobs') }}" class="btn btn-secondary">
+                <span>➕</span> Post New Job
+            </a>
+            <a href="{{ url_for('screen') }}" class="btn btn-primary">
+                <span>⚡</span> Screen Resumes
+            </a>
+        </div>
+    </div>
+
+    <!-- KPI Metric Cards -->
+    <div class="grid-4" style="margin-bottom: 32px;">
+        <div class="stat-card">
+            <div class="stat-icon blue">💼</div>
+            <div>
+                <div class="stat-value">{{ stats.total_jobs }}</div>
+                <div class="stat-label">Active Job Openings</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon purple">📄</div>
+            <div>
+                <div class="stat-value">{{ stats.total_resumes }}</div>
+                <div class="stat-label">Resumes Processed</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon green">🎯</div>
+            <div>
+                <div class="stat-value">{{ stats.shortlisted }}</div>
+                <div class="stat-label">Top Shortlisted (≥70%)</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon amber">📊</div>
+            <div>
+                <div class="stat-value">{{ stats.avg_score }}%</div>
+                <div class="stat-label">Avg Candidate Match</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Job Openings Section -->
+    <div class="card" style="margin-bottom: 32px;">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Active Job Roles</div>
+                <div class="card-subtitle">Screening models configured for each vacancy</div>
+            </div>
+            <a href="{{ url_for('jobs') }}" class="btn btn-secondary btn-sm">Manage All Jobs</a>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Job Role</th>
+                            <th>Department</th>
+                            <th>Experience Req.</th>
+                            <th>Key Required Skills</th>
+                            <th>Applicants</th>
+                            <th>Avg Match</th>
+                            <th style="text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in jobs %}
+                        <tr>
+                            <td>
+                                <strong style="color: var(--primary);">{{ job.title }}</strong>
+                                <div style="font-size: 0.78rem; color: var(--text-muted);">{{ job.location }} &middot; {{ job.job_type }}</div>
+                            </td>
+                            <td>{{ job.department }}</td>
+                            <td>{{ job.min_experience }} yrs ({{ job.min_education }})</td>
+                            <td>
+                                <div class="skill-tags">
+                                    {% for skill in job.required_skills[:4] %}
+                                    <span class="skill-tag">{{ skill }}</span>
+                                    {% endfor %}
+                                    {% if job.required_skills|length > 4 %}
+                                    <span class="skill-tag" style="background:#f1f5f9; color:#64748b;">+{{ job.required_skills|length - 4 }}</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td><strong>{{ job.applicant_count }}</strong> candidates</td>
+                            <td>
+                                {% if job.avg_score > 0 %}
+                                <span class="badge {% if job.avg_score >= 70 %}badge-success{% else %}badge-primary{% endif %}">{{ job.avg_score }}%</span>
+                                {% else %}
+                                <span class="badge badge-neutral">No data</span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: right;">
+                                <a href="{{ url_for('screen', job_id=job.id) }}" class="btn btn-primary btn-sm">
+                                    Screen Resumes &rarr;
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Candidate Screenings -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Recent Candidate Screenings</div>
+                <div class="card-subtitle">AI model ranking outputs across positions</div>
+            </div>
+            <a href="{{ url_for('screen') }}" class="btn btn-secondary btn-sm">Open Workbench</a>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            {% if stats.recent_screenings %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Candidate</th>
+                            <th>Target Role</th>
+                            <th>Match Score</th>
+                            <th>AI Recommendation</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th style="text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in stats.recent_screenings %}
+                        <tr>
+                            <td>
+                                <strong>{{ s.candidate_name }}</strong>
+                                <div style="font-size: 0.78rem; color: var(--text-muted);">{{ s.email }}</div>
+                            </td>
+                            <td>{{ s.job_title }}</td>
+                            <td style="min-width: 140px;">
+                                <div class="score-container">
+                                    <div class="score-bar-bg">
+                                        <div class="score-bar-fill {% if s.overall_score >= 75 %}badge-success{% elif s.overall_score >= 60 %}badge-primary{% elif s.overall_score >= 45 %}badge-warning{% else %}badge-danger{% endif %}"
+                                             style="width: {{ s.overall_score }}%; background-color: {% if s.overall_score >= 75 %}#059669{% elif s.overall_score >= 60 %}#2563eb{% elif s.overall_score >= 45 %}#d97706{% else %}#dc2626{% endif %};">
+                                        </div>
+                                    </div>
+                                    <span class="score-text">{{ s.overall_score }}%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge {% if s.verdict == 'Strong Hire' %}badge-success{% elif s.verdict == 'Shortlisted' %}badge-primary{% elif s.verdict == 'Under Review' %}badge-warning{% else %}badge-danger{% endif %}">
+                                    {{ s.verdict }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge badge-neutral">{{ s.status }}</span>
+                            </td>
+                            <td style="font-size: 0.8rem; color: var(--text-muted);">{{ s.created_at[:10] }}</td>
+                            <td style="text-align: right;">
+                                <a href="{{ url_for('candidate_detail', screening_id=s.id) }}" class="btn btn-secondary btn-sm">
+                                    View Report &rarr;
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div style="padding: 40px; text-align: center; color: var(--text-muted);">
+                <p style="font-size: 1.1rem; margin-bottom: 8px;">No resumes screened yet.</p>
+                <p style="font-size: 0.9rem; margin-bottom: 18px;">Upload resumes or load pre-packaged samples to test the AI ranking engine.</p>
+                <a href="{{ url_for('screen') }}" class="btn btn-primary">Go to Screening Workbench</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

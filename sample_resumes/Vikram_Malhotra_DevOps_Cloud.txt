@@ -1,0 +1,27 @@
+Vikram Malhotra
+Email: vikram.malhotra.ops@gmail.com | Phone: +91 99887 76655 | Location: Hyderabad, India
+LinkedIn: https://linkedin.com/in/vikram-devops | GitHub: https://github.com/v-malhotra-ops
+
+PROFESSIONAL SUMMARY
+Accomplished DevOps and Cloud Infrastructure Engineer with 4 years of experience orchestrating AWS cloud architecture, Kubernetes clusters, Docker microservices, and automated CI/CD pipelines.
+
+EDUCATION
+B.Tech in Computer Engineering, JNTU Hyderabad (2017 - 2021)
+
+TECHNICAL SKILLS
+AWS, Docker, Kubernetes, CI/CD, Terraform, Jenkins, Linux, Ubuntu, Nginx, Python, Bash, Git, Prometheus, Grafana
+
+PROFESSIONAL EXPERIENCE
+DevOps Infrastructure Engineer | CloudScale Networks (2021 - Present)
+• Provisioned and managed AWS infrastructure (VPC, EC2, EKS, RDS, S3) using Terraform Infrastructure as Code.
+• Deployed production Kubernetes (k8s) clusters and configured Helm charts for microservices.
+• Automated continuous integration and deployment pipelines using Jenkins, GitHub Actions, and Docker.
+• Implemented centralized logging and alerting with Prometheus, Grafana, and ELK stack.
+
+Linux Systems Administrator | Nexa Hostings (2020 - 2021)
+• Managed fleet of 150+ Ubuntu and CentOS servers, configuring Nginx, SSL certificates, and firewall rules.
+• Wrote automated maintenance scripts in Bash and Python.
+
+KEY PROJECTS
+• Zero-Downtime EKS Deployment: Automated blue-green deployment pipeline for high-traffic financial app.
+• Disaster Recovery Infrastructure: Automated Terraform modules for multi-region AWS failover.
